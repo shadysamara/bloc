@@ -23,7 +23,6 @@ class TaskBloc extends Bloc<BlocEvent, BlocState> {
     if (event is GetAllTasks) {
       yield TasksLoading();
 
-      ///
       List<Task> allTasks = await getAllTasks();
       if (allTasks.isEmpty) {
         yield EmptyTasks();
@@ -51,6 +50,7 @@ class TaskBloc extends Bloc<BlocEvent, BlocState> {
     } else if (event is UpdateTask) {
       yield TasksLoading();
       try {
+        event.task.isComplete = !event.task.isComplete;
         await DBHelper.dbHelper.updateTask(event.task);
         List<Task> allTasks = await DBHelper.dbHelper.getAllTasks();
         yield AllTasksLoaded(allTasks);
